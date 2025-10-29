@@ -8,11 +8,6 @@ const covers = Object.keys(coverModules)
   .map(path => path.replace('/public/covers/', ''))
   .sort(); // Sort alphabetically for consistent ordering
 
-// Cache busting utility - adds timestamp to prevent browser caching
-const getCacheBustedUrl = (filename) => {
-  return `/covers/${filename}?v=${Date.now()}`;
-};
-
 export const coverAtom = atom(0); // Current selected cover index
 export const bookOpenAtom = atom(false); // Book open/closed state
 export const sidebarVisibleAtom = atom(true); // Thumbnail sidebar visibility
@@ -139,7 +134,7 @@ export const UI = ({ experienceRef }) => {
                 }`}
               >
                 <img
-                  src={getCacheBustedUrl(cover)}
+                  src={`/covers/${cover}`}
                   alt={`Cover ${index + 1}`}
                   className="w-full h-auto"
                 />
@@ -149,7 +144,7 @@ export const UI = ({ experienceRef }) => {
                 <button
                   onClick={(e) => {
                     e.stopPropagation(); // Prevent triggering cover change
-                    window.open(getCacheBustedUrl(cover), '_blank', 'noopener,noreferrer');
+                    window.open(`/covers/${cover}`, '_blank', 'noopener,noreferrer');
                   }}
                   className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-auto bg-black/60 hover:bg-black/80 text-white p-1.5 rounded-full text-xs"
                   title="View full image in new tab"
