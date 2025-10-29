@@ -25,9 +25,14 @@ const COVER_IMAGE_HEIGHT = 1.65; // 8.25" * 0.2
 
 const easingFactor = 0.08;
 
-// Preload all cover textures
+// Cache busting utility - adds timestamp to prevent browser caching
+const getCacheBustedUrl = (filename) => {
+  return `/covers/${filename}?v=${Date.now()}`;
+};
+
+// Preload all cover textures with cache busting
 covers.forEach((cover) => {
-  useTexture.preload(`/covers/${cover}`);
+  useTexture.preload(getCacheBustedUrl(cover));
 });
 
 export const Book = ({ ...props }) => {
@@ -38,8 +43,8 @@ export const Book = ({ ...props }) => {
   const backCoverRef = useRef();
   const spineRef = useRef();
 
-  // Load the selected cover texture
-  const coverTexture = useTexture(`/covers/${covers[selectedCover]}`);
+  // Load the selected cover texture with cache busting
+  const coverTexture = useTexture(getCacheBustedUrl(covers[selectedCover]));
   coverTexture.colorSpace = SRGBColorSpace;
 
   // Clone textures for each surface with proper UV mapping
