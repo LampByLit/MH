@@ -10,17 +10,17 @@ import {
 import { degToRad } from "three/src/math/MathUtils.js";
 import { coverAtom, bookOpenAtom, covers } from "./UI";
 
-// Book dimensions based on actual trim size: 8" (height) × 5" (width) × 0.842" (spine depth)
+// Book dimensions based on actual trim size: 8" (height) × 5" (width) × 0.593" (spine depth)
 // The book opens along the 8" edge - spine runs along the 8" dimension
 // Scaling down to fit in scene (1 unit = 1 inch scaled to 0.2)
 const BOOK_HEIGHT = 1.6; // 8" * 0.2 (vertical dimension - spine runs along this)
 const BOOK_WIDTH = 1.0; // 5" * 0.2 (horizontal width of each cover)
-const SPINE_DEPTH = 0.168; // 0.842" * 0.2 (thickness of the spine)
+const SPINE_DEPTH = 0.1186; // 0.593" * 0.2 (thickness of the spine)
 const COVER_THICKNESS = 0.008; // Thin cover material
 
-// Cover image has front (5") + spine (0.842") + back (5") = 10.842" total width
+// Cover image has front (5") + spine (0.593") + back (5") = 10.593" total width
 // But the HEIGHT of the cover image is 8.25" (matches the 8" book height)
-const COVER_TOTAL_WIDTH = 2.168; // 10.842" * 0.2
+const COVER_TOTAL_WIDTH = 2.1186; // 10.593" * 0.2
 const COVER_IMAGE_HEIGHT = 1.65; // 8.25" * 0.2
 
 const easingFactor = 0.08;
@@ -48,27 +48,27 @@ export const Book = ({ ...props }) => {
   const backTexture = coverTexture.clone();
 
   // Calculate UV mapping for wraparound texture with bleed adjustment
-  // Cover image: 10.842" total (5" front + 0.842" spine + 5" back) × 8.25" height
+  // Cover image: 10.593" total (5" front + 0.593" spine + 5" back) × 8.25" height
   // Bleed: 0.125" to remove from outer edges only
   
-  const BLEED_HORIZONTAL = 0.125 / 10.842; // ~0.01153 in UV space
+  const BLEED_HORIZONTAL = 0.125 / 10.593; // ~0.01180 in UV space
   const BLEED_VERTICAL = 0.125 / 8.25;     // ~0.01515 in UV space
   
   // Front cover: remove bleed from LEFT (outer edge), TOP, and BOTTOM
-  const frontWidth = 5 / 10.842;
-  const frontWidthTrimmed = (5 - 0.125) / 10.842; // Remove 0.125" from left
+  const frontWidth = 5 / 10.593;
+  const frontWidthTrimmed = (5 - 0.125) / 10.593; // Remove 0.125" from left
   frontTexture.repeat.set(frontWidthTrimmed, 1 - 2 * BLEED_VERTICAL);
   frontTexture.offset.set(BLEED_HORIZONTAL, BLEED_VERTICAL);
   frontTexture.needsUpdate = true;
 
   // Spine: remove bleed from TOP and BOTTOM only (not left/right - connects to covers)
-  const spineWidth = 0.842 / 10.842;
+  const spineWidth = 0.593 / 10.593;
   spineTexture.repeat.set(spineWidth, 1 - 2 * BLEED_VERTICAL);
   spineTexture.offset.set(frontWidth, BLEED_VERTICAL);
   spineTexture.needsUpdate = true;
 
   // Back cover: remove bleed from RIGHT (outer edge), TOP, and BOTTOM
-  const backWidthTrimmed = (5 - 0.125) / 10.842; // Remove 0.125" from right
+  const backWidthTrimmed = (5 - 0.125) / 10.593; // Remove 0.125" from right
   backTexture.repeat.set(backWidthTrimmed, 1 - 2 * BLEED_VERTICAL);
   backTexture.offset.set(frontWidth + spineWidth, BLEED_VERTICAL);
   backTexture.needsUpdate = true;
